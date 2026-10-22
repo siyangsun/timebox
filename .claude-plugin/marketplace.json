@@ -1,0 +1,12 @@
+{
+  "name": "timebox-plugins",
+  "owner": { "name": "Siyang Sun" },
+  "description": "Timebox: wall-clock, context and usage budgets for Claude Code.",
+  "plugins": [
+    {
+      "name": "timebox",
+      "source": ".",
+      "description": "Wall-clock timeboxing for Claude: periodic self check-ins, phase-based scope cutting, budget-aware wrap-up, and a resumable checkpoint file."
+    }
+  ]
+}

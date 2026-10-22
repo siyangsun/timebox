@@ -1,0 +1,8 @@
+{
+  "name": "timebox",
+  "version": "0.2.0",
+  "description": "Wall-clock timeboxing for Claude: periodic self check-ins, phase-based scope cutting, budget-aware wrap-up, and a resumable checkpoint file.",
+  "author": { "name": "Siyang Sun" },
+  "repository": "https://github.com/siyangsun/timebox",
+  "license": "MIT"
+}

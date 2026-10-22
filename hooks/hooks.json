@@ -1,0 +1,25 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      { "hooks": [
+        { "type": "command", "command": "\"${CLAUDE_PLUGIN_ROOT}\"/skills/timebox/scripts/run.sh hook post", "timeout": 10 },
+        { "type": "command", "command": "\"${CLAUDE_PLUGIN_ROOT}\"/skills/timebox/scripts/run.sh hook sleeper", "asyncRewake": true }
+      ] }
+    ],
+    "PreToolUse": [
+      { "matcher": "Bash", "hooks": [ { "type": "command", "command": "\"${CLAUDE_PLUGIN_ROOT}\"/skills/timebox/scripts/run.sh hook pre", "timeout": 10, "onFailure": "continue" } ] }
+    ],
+    "PreCompact": [
+      { "hooks": [ { "type": "command", "command": "\"${CLAUDE_PLUGIN_ROOT}\"/skills/timebox/scripts/run.sh hook precompact", "timeout": 10 } ] }
+    ],
+    "Stop": [
+      { "hooks": [ { "type": "command", "command": "\"${CLAUDE_PLUGIN_ROOT}\"/skills/timebox/scripts/run.sh hook stop", "timeout": 10 } ] }
+    ],
+    "UserPromptSubmit": [
+      { "hooks": [ { "type": "command", "command": "\"${CLAUDE_PLUGIN_ROOT}\"/skills/timebox/scripts/run.sh hook prompt", "timeout": 10 } ] }
+    ],
+    "SessionStart": [
+      { "hooks": [ { "type": "command", "command": "\"${CLAUDE_PLUGIN_ROOT}\"/skills/timebox/scripts/run.sh hook session", "timeout": 10 } ] }
+    ]
+  }
+}

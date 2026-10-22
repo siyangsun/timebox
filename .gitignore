@@ -1,0 +1,17 @@
+# timebox runtime state (per-project, never commit)
+.timebox/
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# Local backups and OS/editor noise
+*.timebox-bak
+*.tmp
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
