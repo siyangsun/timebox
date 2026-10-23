@@ -14,7 +14,9 @@ Hooks (run by Claude Code, JSON on stdin):
   timebox.py hook post|pre|stop|prompt|session|precompact|sleeper
 Status line (JSON on stdin): timebox.py statusline
 """
-import argparse, datetime as dt, json, os, re, shutil, signal, subprocess, sys, time
+import argparse, datetime as dt, functools, json, os, re, shutil, signal, subprocess, sys, time
+
+open = functools.partial(open, encoding="utf-8")  # Windows defaults to cp1252; checkpoints and messages are UTF-8
 
 SCRIPT = os.path.abspath(__file__)
 CMD = '"' + os.path.join(os.path.dirname(SCRIPT), "run.sh").replace("\\", "/") + '"'  # launcher finds python on any OS
@@ -351,7 +353,7 @@ def cmd_statusline():
         orig = None
     if orig and orig.get("command"):
         try:
-            r = subprocess.run(orig["command"], shell=True, input=raw, capture_output=True, text=True, timeout=5)
+            r = subprocess.run(orig["command"], shell=True, input=raw, capture_output=True, encoding="utf-8", timeout=5)
             sys.stdout.write(r.stdout)
         except Exception:
             pass
@@ -513,6 +515,8 @@ def hook(p, event, data):
 
 
 def main():
+    for s in (sys.stdin, sys.stdout, sys.stderr):
+        s.reconfigure(encoding="utf-8", errors="replace")
     if len(sys.argv) >= 2 and sys.argv[1] == "statusline":
         return cmd_statusline()
     if len(sys.argv) >= 3 and sys.argv[1] == "hook":

@@ -15,7 +15,7 @@ def env(tmp_path):
 
 
 def run(env, *args, stdin="{}"):
-    return subprocess.run([sys.executable, "-I", S, *args], input=stdin, capture_output=True, text=True, env=env[0], timeout=30)
+    return subprocess.run([sys.executable, "-I", S, *args], input=stdin, capture_output=True, encoding="utf-8", env=env[0], timeout=30)
 
 def hook(env, name, **data):
     r = run(env, "hook", name, stdin=json.dumps(data))
@@ -135,7 +135,7 @@ def test_statusline_telemetry_and_passthrough(env):
     assert run(env, "install-statusline").returncode == 0
     cfg = json.loads(settings.read_text())
     assert cfg["theme"] == "x" and cfg["statusLine"]["padding"] == 2 and "timebox" in cfg["statusLine"]["command"] and (env[2] / ".claude" / "timebox" / "timebox.py").exists()
-    r = subprocess.run(cfg["statusLine"]["command"], shell=True, input='{"cwd":"/nope","x":"hello"}', capture_output=True, text=True, env=env[0])
+    r = subprocess.run(cfg["statusLine"]["command"], shell=True, input='{"cwd":"/nope","x":"hello"}', capture_output=True, encoding="utf-8", env=env[0])
     assert r.stdout.strip() == '{"CWD":"/NOPE","X":"HELLO"}'
     assert "Already installed" in run(env, "install-statusline").stdout  # refreshes the copy
     run(env, "install-statusline", "--uninstall")
@@ -145,7 +145,7 @@ def test_statusline_telemetry_and_passthrough(env):
 def test_sleeper_wakes_and_dedupes_and_stops(env):
     start(env, "10m", "--checkin", "0.03")              # 1.8s check-ins
     edit(env, last_checkin=time.time() - 100)
-    p = subprocess.Popen([sys.executable, "-I", S, "hook", "sleeper"], stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, env=env[0])
+    p = subprocess.Popen([sys.executable, "-I", S, "hook", "sleeper"], stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding="utf-8", env=env[0])
     time.sleep(0.5)
     assert run(env, "hook", "sleeper").returncode == 0  # duplicate exits at once
     out, err = p.communicate(timeout=15)
@@ -186,5 +186,5 @@ def test_squeeze_at(env):
 
 @pytest.mark.skipif(not __import__("shutil").which("sh"), reason="needs sh (Git Bash on Windows)")
 def test_launcher_finds_python(env):
-    r = subprocess.run(["sh", RUN, "template"], capture_output=True, text=True, env=env[0], timeout=30)
+    r = subprocess.run(["sh", RUN, "template"], capture_output=True, encoding="utf-8", env=env[0], timeout=30)
     assert r.returncode == 0 and "## Resume" in r.stdout
